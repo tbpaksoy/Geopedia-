@@ -45,13 +45,17 @@ public:
 
     GLuint GetVAO() const;
     void Bind();
+    void BindFBO();
     void CreateVBO();
     void CreateEBO();
     void CreateFBO(unsigned int colorAttachmentCount, unsigned int width, unsigned int height);
     void LinkVBO(GLuint vbo);
     void LinkEBO(GLuint ebo);
     void LinkFBO(GLuint fbo);
-    void DrawElement();
+    void Draw();
+    void DrawElements();
+    void DrawBuffers();
+    void DrawBuffer(unsigned int index, Shader *shader);
     bool HasShader() const;
     void SetShader(Shader *shader);
     void UseShader();
@@ -65,6 +69,7 @@ public:
     void SetIndexData(unsigned int *data, unsigned int size);
     void ActivateAttributes();
     void AddAttribute(unsigned int size);
+    void ActivateTexture(unsigned int index = 0);
 };
 
 #endif

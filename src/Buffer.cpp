@@ -32,6 +32,11 @@ void Buffer::Bind()
     glBindVertexArray(vao);
 }
 
+void Buffer::BindFBO()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+}
+
 // En: Generates and binds the VBO
 // Tr: VBO oluşturur ve bağlar
 void Buffer::CreateVBO()
@@ -53,6 +58,13 @@ void Buffer::CreateEBO()
 void Buffer::CreateFBO(unsigned int colorAttachmentsCount, unsigned int width, unsigned int height)
 {
     Bind();
+
+    if (fbo)
+        glDeleteFramebuffers(1, &fbo);
+
+    if (colorAttachments)
+        delete[] colorAttachments;
+
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     colorAttachmentSize = colorAttachmentsCount;
@@ -90,13 +102,61 @@ void Buffer::LinkEBO(GLuint ebo)
     this->ebo = ebo;
 }
 
+// En : Draws accordintg to type of buffer.
+// Tr : Buffer'ın tipine göre çizme işlemi yapar.
+void Buffer::Draw()
+{
+    switch (type)
+    {
+    case GL_ELEMENT_ARRAY_BUFFER:
+        DrawElements();
+        break;
+    case GL_FRAMEBUFFER:
+        DrawBuffers();
+        break;
+    case GL_VERTEX_ARRAY:
+        // TODO: Implement this part after implementing the vertex array.
+        std::cout << "Not implemented yet!" << std::endl;
+        break;
+    default:
+        std::cout << "Unknown type!" << glGetString(type) << std::endl;
+        break;
+    };
+}
+
 // En: Renders the buffer (elements wise).
 // Tr: Buffer'ı renderlar (element bazlı).
-void Buffer::DrawElement()
+void Buffer::DrawElements()
 {
     if (ebo && vbo && indexSize)
     {
         glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
+    }
+}
+
+// En: Draws the buffers.
+// Tr: Buffer'ları çizer.
+void Buffer::DrawBuffers()
+{
+    if (fbo)
+    {
+        glDrawBuffers(colorAttachmentSize, colorAttachments);
+    }
+}
+
+void Buffer::DrawBuffer(unsigned int index, Shader *shader)
+{
+    if (fbo)
+    {
+        glDrawBuffer(GL_COLOR_ATTACHMENT0 + index);
+        if (shader)
+        {
+            shader->Use();
+        }
+        else if (this->shader)
+        {
+            this->shader->Use();
+        }
     }
 }
 
