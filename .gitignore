@@ -1,0 +1,9 @@
+
+/.vscode
+/cppfiles
+/include/GL
+/include
+imgui.ini
+*.dll
+*.exe
+.gitattributes
