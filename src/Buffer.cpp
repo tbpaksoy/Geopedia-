@@ -112,7 +112,7 @@ void Buffer::Draw()
         DrawElements();
         break;
     case GL_FRAMEBUFFER:
-        DrawBuffers();
+        DrawFrames();
         break;
     case GL_VERTEX_ARRAY:
         // TODO: Implement this part after implementing the vertex array.
@@ -136,7 +136,7 @@ void Buffer::DrawElements()
 
 // En: Draws the buffers.
 // Tr: Buffer'ları çizer.
-void Buffer::DrawBuffers()
+void Buffer::DrawFrames()
 {
     if (fbo)
     {
@@ -144,7 +144,7 @@ void Buffer::DrawBuffers()
     }
 }
 
-void Buffer::DrawBuffer(unsigned int index, Shader *shader)
+void Buffer::DrawFrame(unsigned int index, Shader *shader)
 {
     if (fbo)
     {

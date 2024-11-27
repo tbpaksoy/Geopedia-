@@ -54,8 +54,8 @@ public:
     void LinkFBO(GLuint fbo);
     void Draw();
     void DrawElements();
-    void DrawBuffers();
-    void DrawBuffer(unsigned int index, Shader *shader);
+    void DrawFrames();
+    void DrawFrame(unsigned int index, Shader *shader);
     bool HasShader() const;
     void SetShader(Shader *shader);
     void UseShader();
