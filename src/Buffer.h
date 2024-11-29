@@ -17,14 +17,14 @@ private:
     GLuint *colorAttachments = nullptr;
     GLenum type;
     GLenum usage;
-    Shader *shader = nullptr;
+    Shader **shaders = nullptr;
 
     // En: Related to Data
     // Tr: Veri ile ilgili
 
     float *vertexData;
     unsigned int *indexData;
-    unsigned int indexSize, vertexSize, colorAttachmentSize;
+    unsigned int indexSize, vertexSize, colorAttachmentSize, shaderSize;
 
     // En: Related to internal data
     // Tr: Dahili veri ile ilgili
@@ -53,12 +53,11 @@ public:
     void LinkEBO(GLuint ebo);
     void LinkFBO(GLuint fbo);
     void Draw();
-    void DrawElements();
-    void DrawFrames();
-    void DrawFrame(unsigned int index, Shader *shader);
+    void DrawEBO();
     bool HasShader() const;
     void SetShader(Shader *shader);
-    void UseShader();
+    void SetShaders(Shader **shaders, unsigned int size);
+    void UseShader(unsigned int index = 0);
 
     // En: Related to Data
     // Tr: Veri ile ilgili

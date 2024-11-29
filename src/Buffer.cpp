@@ -55,6 +55,14 @@ void Buffer::CreateEBO()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 }
 
+// En: Generates and binds the FBO
+// `colorAttachmentsCount` is the count of the color attachments.
+// `width` is the width of the color attachments.
+// `height` is the height of the color attachments.
+// Tr: FBO oluşturur ve bağlar
+// `colorAttachmentsCount` renk eklerinin sayısıdır.
+// `width` renk eklerinin genişliğidir.
+// `height` renk eklerinin yüksekliğidir.
 void Buffer::CreateFBO(unsigned int colorAttachmentsCount, unsigned int width, unsigned int height)
 {
     Bind();
@@ -109,10 +117,10 @@ void Buffer::Draw()
     switch (type)
     {
     case GL_ELEMENT_ARRAY_BUFFER:
-        DrawElements();
+        DrawEBO();
         break;
     case GL_FRAMEBUFFER:
-        DrawFrames();
+        // TODO: Implement this part after implementing the frame buffer.
         break;
     case GL_VERTEX_ARRAY:
         // TODO: Implement this part after implementing the vertex array.
@@ -126,7 +134,7 @@ void Buffer::Draw()
 
 // En: Renders the buffer (elements wise).
 // Tr: Buffer'ı renderlar (element bazlı).
-void Buffer::DrawElements()
+void Buffer::DrawEBO()
 {
     if (ebo && vbo && indexSize)
     {
@@ -134,37 +142,11 @@ void Buffer::DrawElements()
     }
 }
 
-// En: Draws the buffers.
-// Tr: Buffer'ları çizer.
-void Buffer::DrawFrames()
-{
-    if (fbo)
-    {
-        glDrawBuffers(colorAttachmentSize, colorAttachments);
-    }
-}
-
-void Buffer::DrawFrame(unsigned int index, Shader *shader)
-{
-    if (fbo)
-    {
-        glDrawBuffer(GL_COLOR_ATTACHMENT0 + index);
-        if (shader)
-        {
-            shader->Use();
-        }
-        else if (this->shader)
-        {
-            this->shader->Use();
-        }
-    }
-}
-
 // En: Retuns true if the buffer has shader, else false.
 // Tr: Buffer'ın shader'ı varsa true döndürür, yoksa false.
 bool Buffer::HasShader() const
 {
-    return shader != nullptr;
+    return shaders != nullptr && shaders[0] != nullptr;
 }
 
 // En: Sets the shader of the buffer.
@@ -173,16 +155,29 @@ bool Buffer::HasShader() const
 // `shader` ayarlanacak shader.
 void Buffer::SetShader(Shader *shader)
 {
-    this->shader = shader;
+    this->shaders = new Shader *[1]{shader};
+    this->shaderSize = 1;
+}
+
+// En: Sets the shaders of the buffer.
+// `shaders` is the shaders to set.
+// `size` is the size of the shaders.
+// Tr: Buffer'ın shader'larını ayarlar.
+// `shaders` ayarlanacak shaderlar.
+// `size` shader sayısı.
+void Buffer::SetShaders(Shader **shaders, unsigned int size)
+{
+    this->shaders = shaders;
+    this->shaderSize = size;
 }
 
 // En: Uses the shader of the buffer.
 // Tr: Buffer'ın shader'ını kullanır.
-void Buffer::UseShader()
+void Buffer::UseShader(unsigned int index)
 {
-    if (shader)
+    if (shaders && shaders[0])
     {
-        shader->Use();
+        shaders[index]->Use();
     }
 }
 

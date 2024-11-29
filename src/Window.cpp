@@ -96,7 +96,7 @@ void Window::Run()
         for (Buffer *buffer : buffers)
         {
             buffer->Bind();
-            buffer->DrawElements();
+            buffer->DrawEBO();
             if (buffer->HasShader())
                 buffer->UseShader();
             else
