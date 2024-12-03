@@ -7,7 +7,7 @@ class Shader
 {
 private:
     GLuint program;
-    std::map<std::string, GLint> attributes;
+    std::map<GLint, GLint> attributes;
 
 public:
     Shader(const char *vertexPath, const char *fragmentPath);

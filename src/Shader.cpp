@@ -30,25 +30,22 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
         vertexCode += line + '\n';
         if (line.find("layout") != std::string::npos)
         {
-            int begin = line.find("in") + 2, end = line.find(";", begin);
+            int begin = line.find("=") + 1, end = line.find(")");
+            std::string attribute = line.substr(begin, end - begin);
+            while (attribute.find(" ") != std::string::npos)
+            {
+                attribute.erase(attribute.find(" "), 1);
+            }
+            GLint loc = std::stoi(attribute);
             for (auto it : attributesSizes)
             {
-                if (line.find(it.first, begin) != std::string::npos)
+                if (line.find(it.first) != std::string::npos)
                 {
-                    std::string name = line.substr(begin, end - begin);
-                    while (name[0] == ' ')
-                        name = name.substr(1);
-                    while (name[name.size() - 1] == ' ')
-                        name = name.substr(0, name.size() - 1);
-                    GLint size = it.second;
-                    name = name.substr(std::string(it.first).size() + 1);
-                    attributes[name] = size;
-                    break;
+                    attributes[loc] = it.second;
                 }
             }
         }
     }
-
     vertexFile.close();
 
     fragmentFile.open(fragmentPath);
@@ -89,20 +86,22 @@ void Shader::Activate()
 {
     glUseProgram(program);
     unsigned int offset = 0, stride = 0;
+    int max = 0;
     for (auto it : attributes)
     {
         stride += it.second;
+        max = std::max(max, it.first);
     }
-    for (auto it : attributes)
+    for (int i = 0; i <= max; i++)
     {
-        GLint loc = glGetAttribLocation(program, it.first.c_str());
-        if (loc > -1)
+        std::cout << i << std::endl;
+        if (attributes.find(i) != attributes.end())
         {
-            glEnableVertexAttribArray(loc);
-            glVertexAttribPointer(loc, it.second, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *)(offset * sizeof(float)));
+            std::cout << i << std::endl;
+            glEnableVertexAttribArray(i);
+            glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *)(offset * sizeof(float)));
+            offset += attributes[i];
         }
-        offset += it.second;
-        std::cout << offset << std::endl;
     }
 }
 

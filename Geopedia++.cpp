@@ -33,12 +33,19 @@ int main()
     camera->SetPosition(glm::vec3(0, 0.5f, -3.0f));
     camera->SetUniforms(meshShader);
 
+    ImGuiIO &io = ImGui::GetIO();
+
+    io.Fonts->AddFontFromFileTTF("fonts/unifont-15.1.05.otf", 16.0f, nullptr, io.Fonts->GetGlyphRangesDefault());
+    io.Fonts->Build();
+
     win->SetDefaultShaders({meshShader});
 
     win->SetUpdate([&]()
                    {
                        ImGui::Begin("Geopedia++");
+
                        ImGui::Text("Hello, world!");
+
                        ImGui::End();
 
                        model->Draw(meshShader);
