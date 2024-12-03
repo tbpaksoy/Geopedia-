@@ -4,8 +4,8 @@
 class IDrawable
 {
 public:
-    virtual void Draw(Shader *shader) = 0;
-    virtual float *GetVertexData(unsigned int &size) const = 0;
-    virtual unsigned int *GetIndexData(unsigned int &size) const = 0;
+    virtual void Draw(Shader *shader) {}
+    virtual void Draw() {}
+    virtual void Bind() {}
 };
 #endif

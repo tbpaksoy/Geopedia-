@@ -17,8 +17,9 @@ public:
     Model(float *vertices, unsigned int vertexCount, unsigned int *indices, unsigned int indexCount);
     ~Model();
     void Draw(Shader *shader) override;
-    float *GetVertexData(unsigned int &size) const override;
-    unsigned int *GetIndexData(unsigned int &size) const override;
+    void Bind() override;
+    float *GetVertexData(unsigned int &size) const;
+    unsigned int *GetIndexData(unsigned int &size) const;
     void SetVertexData(float *vertices, unsigned int vertexCount);
     void SetIndexData(unsigned int *indices, unsigned int indexCount);
 

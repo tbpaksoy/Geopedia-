@@ -1,7 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "Buffer.h"
 #include "Shader.h"
 #include "imgui/imgui.h"
 #include <GLFW/glfw3.h>
@@ -23,7 +22,6 @@ private:
     // En : Render properties
     // Tr : Render özellikleri
 
-    std::vector<Buffer *> buffers;
     std::function<void()> style = []()
     {
         ImGui::StyleColorsClassic();
@@ -50,7 +48,6 @@ public:
     // En : Render functions
     // Tr : Render fonksiyonları
 
-    void AddBuffer(Buffer *buffer);
     void SetUpdate(std::function<void()> update);
     void SetStyle(std::function<void()> style);
     void SetDefaultShaders(std::vector<Shader *> shaders);

@@ -93,17 +93,6 @@ void Window::Run()
 
         update();
 
-        for (Buffer *buffer : buffers)
-        {
-            buffer->Bind();
-            buffer->DrawEBO();
-            if (buffer->HasShader())
-                buffer->UseShader();
-            else
-                for (Shader *shader : defaultShaders)
-                    shader->Use();
-        }
-
         ImGui::Render();
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -119,18 +108,10 @@ void Window::Run()
 // En : Render functions
 // Tr : Render fonksiyonları
 
-// En : Adds a buffer to the window.
-// `buffer` : Buffer to add.
-// Tr : Pencereye bir buffer ekler.
-// `buffer` : Eklenen buffer.
-void Window::AddBuffer(Buffer *buffer)
-{
-    buffers.push_back(buffer);
-}
-// En : Removes a buffer from the window.
-// `buffer` : Buffer to remove.
-// Tr : Pencereden bir buffer çıkarır.
-// `buffer` : Çıkarılan buffer.
+// En : Sets the update function.
+//  `update` : Update function.
+//  Tr : Güncelleme fonksiyonunu ayarlar.
+//  `update` : Güncelleme fonksiyonu.
 void Window::SetUpdate(std::function<void()> update)
 {
     this->update = update;

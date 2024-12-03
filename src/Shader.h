@@ -2,15 +2,17 @@
 #define SHADER_H
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-
+#include <map>
 class Shader
 {
 private:
     GLuint program;
+    std::map<std::string, GLint> attributes;
 
 public:
     Shader(const char *vertexPath, const char *fragmentPath);
     ~Shader();
+    void Activate();
     void Use();
     void Set(const char *name, float value);
     void Set(const char *name, int value);
