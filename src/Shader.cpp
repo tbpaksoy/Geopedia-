@@ -16,6 +16,31 @@ static std::map<std::string, GLint> attributesSizes =
         {"mat3", 9},
         {"mat4", 16}};
 
+void Shader::CheckProgramLinkErrors()
+{
+    GLint success;
+    GLchar infoLog[1024];
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(program, 1024, NULL, infoLog);
+        std::cerr << "Error: Shader program failed to link\n"
+                  << infoLog << std::endl;
+    }
+}
+void Shader::CheckShaderCompileErrors(GLuint shader)
+{
+    GLint success;
+    GLchar infoLog[1024];
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+        std::cerr << "Error: Shader failed to compile\n"
+                  << infoLog << std::endl;
+    }
+}
+
 // En: Constructor and destructor
 // Tr: Yapıcı ve yıkıcı fonksiyonlar
 
@@ -60,16 +85,23 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
 
+    CheckShaderCompileErrors(vertexShader);
+
     const char *fragmentSource = fragmentCode.c_str();
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
 
+    CheckShaderCompileErrors(fragmentShader);
+
     program = glCreateProgram();
+
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);
 
     glLinkProgram(program);
+
+    CheckProgramLinkErrors();
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -94,12 +126,21 @@ void Shader::Activate()
     }
     for (int i = 0; i <= max; i++)
     {
-        std::cout << i << std::endl;
         if (attributes.find(i) != attributes.end())
         {
             std::cout << i << std::endl;
             glEnableVertexAttribArray(i);
+            GLenum error = glGetError();
+            if (error != GL_NO_ERROR)
+            {
+                std::cerr << "Error: " << error << std::endl;
+            }
             glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *)(offset * sizeof(float)));
+            error = glGetError();
+            if (error != GL_NO_ERROR)
+            {
+                std::cerr << "Error: " << error << std::endl;
+            }
             offset += attributes[i];
         }
     }

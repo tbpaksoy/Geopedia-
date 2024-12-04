@@ -23,8 +23,8 @@ int main()
         0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 1.0f, 0.75f, 0.75f};
     unsigned int *indices = new unsigned int[3]{0, 1, 2};
 
-    Shader *meshShader = new Shader("shaders/mesh.vs", "shaders/mesh.fs");
     Model *model = new Model(vertices, 27, indices, 3);
+    Shader *meshShader = new Shader("shaders/mesh.vs", "shaders/mesh.fs");
     meshShader->Activate();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -35,7 +35,11 @@ int main()
 
     ImGuiIO &io = ImGui::GetIO();
 
-    io.Fonts->AddFontFromFileTTF("fonts/unifont-15.1.05.otf", 16.0f, nullptr, io.Fonts->GetGlyphRangesDefault());
+    ImFontGlyphRangesBuilder builder;
+    ImVector<ImWchar> ranges;
+    builder.AddText("qwertyuıopğüasdfghjklşizxcvbnmöçQWERTYUIOPĞÜASDFGHJKLŞİZXCVBNMÖÇ0123456789.,-+*/=()[]{}<>!@#$%^&*;:|\\\"'`~_? \t\n");
+    builder.BuildRanges(&ranges);
+    io.Fonts->AddFontFromFileTTF("fonts/unifont-15.1.05.otf", 16.0f, nullptr, ranges.Data);
     io.Fonts->Build();
 
     win->SetDefaultShaders({meshShader});
@@ -44,7 +48,7 @@ int main()
                    {
                        ImGui::Begin("Geopedia++");
 
-                       ImGui::Text("Hello, world!");
+                       ImGui::Text("Merhaba Dünya!");
 
                        ImGui::End();
 

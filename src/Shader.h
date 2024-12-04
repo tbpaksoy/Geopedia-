@@ -8,6 +8,8 @@ class Shader
 private:
     GLuint program;
     std::map<GLint, GLint> attributes;
+    void CheckProgramLinkErrors();
+    void CheckShaderCompileErrors(GLuint shader);
 
 public:
     Shader(const char *vertexPath, const char *fragmentPath);
