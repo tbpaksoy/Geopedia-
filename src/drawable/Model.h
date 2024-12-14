@@ -2,6 +2,7 @@
 #define MODEL_H
 #include "IDrawable.h"
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 class Model : public IDrawable
 {
 private:
@@ -22,7 +23,6 @@ public:
     unsigned int *GetIndexData(unsigned int &size) const;
     void SetVertexData(float *vertices, unsigned int vertexCount);
     void SetIndexData(unsigned int *indices, unsigned int indexCount);
-
     friend void CombineModel(Model **models, unsigned int modelCount, Model *&result);
     friend void CombineModel(Model **models, unsigned int modelCount, GLuint &vao, GLuint &vbo, GLuint &ebo);
 };

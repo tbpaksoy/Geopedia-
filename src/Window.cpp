@@ -80,7 +80,7 @@ void Window::Run()
     style();
 
     float lastFrame = 0.0f, currentFrame = 0.0f;
-
+    start();
     while (!glfwWindowShouldClose(window))
     {
         ImGui_ImplGlfw_NewFrame();
@@ -114,7 +114,13 @@ void Window::Run()
 //  `update` : Güncelleme fonksiyonu.
 void Window::SetUpdate(std::function<void()> update)
 {
-    this->update = update;
+    if (update)
+        this->update = update;
+}
+void Window::SetStart(std::function<void()> start)
+{
+    if (start)
+        this->start = start;
 }
 // En : Sets the update function.
 // `update` : Update function.

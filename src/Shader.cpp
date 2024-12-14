@@ -128,7 +128,6 @@ void Shader::Activate()
     {
         if (attributes.find(i) != attributes.end())
         {
-            std::cout << i << std::endl;
             glEnableVertexAttribArray(i);
             GLenum error = glGetError();
             if (error != GL_NO_ERROR)

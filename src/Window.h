@@ -16,7 +16,8 @@ private:
     GLFWwindow *window;
     unsigned int width, height;
     const char *title;
-    std::function<void()> update;
+    std::function<void()> update = []() {};
+    std::function<void()> start = []() {};
     float deltaTime = 0.0f;
 
     // En : Render properties
@@ -49,6 +50,7 @@ public:
     // Tr : Render fonksiyonları
 
     void SetUpdate(std::function<void()> update);
+    void SetStart(std::function<void()> start);
     void SetStyle(std::function<void()> style);
     void SetDefaultShaders(std::vector<Shader *> shaders);
 };

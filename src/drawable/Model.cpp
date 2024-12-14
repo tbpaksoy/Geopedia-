@@ -63,6 +63,7 @@ void Model::SetIndexData(unsigned int *indices, unsigned int indexCount)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 }
+
 void CombineModel(Model **models, unsigned int modelCount, Model *&result)
 {
     unsigned int vertexCount = std::accumulate(models, models + modelCount, 0, [](unsigned int acc, Model *model)
