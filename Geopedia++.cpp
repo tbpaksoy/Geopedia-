@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <filesystem>
+#include <time.h>
 
 #include "src/Window.h"
 #include "src/Shader.h"
@@ -55,13 +56,16 @@ void FileDialog()
 
 int main()
 {
-  std::cout << "test" << std::endl;
+  srand(time(nullptr));
+
   Polygon poly = Polygon();
-  poly.surface.push_back(glm::vec2(0, 0));
-  poly.surface.push_back(glm::vec2(0, 1));
-  poly.surface.push_back(glm::vec2(1, 1));
-  poly.surface.push_back(glm::vec2(1, 0));
-  poly.surface.push_back(glm::vec2(2, 0));
+  for (int i = 0; i < 8; i++)
+  {
+    float x = (rand() % 2 == 0 ? -1 : 1) * (float)rand() / RAND_MAX,
+          y = (rand() % 2 == 0 ? -1 : 1) * (float)rand() / RAND_MAX;
+    glm::vec2 v = glm::vec2(x, y) * 2.0f;
+    poly.surface.push_back(v);
+  }
   poly.Order();
 
   float *pv = nullptr;
@@ -77,12 +81,17 @@ int main()
     nv[i + 2] = pv[j + 2];
 
     nv[i + 3] = nv[i + 4] = nv[i + 5] = 1.0f;
-    nv[i + 6] = nv[i + 7] = nv[i + 8] = 1.0f;
+
+    nv[i + 6] = std::cos(nv[i]);
+    nv[i + 7] = std::sin(nv[i + 1]);
+    nv[i + 8] = (nv[i + 6] + nv[i + 7]) / 2.0f;
   }
 
   Window *fileWindow = new Window("Geopedia++", 800, 600);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
   Camera *camera = new Camera();
-  camera->SetPosition(glm::vec3(0, 0, -5));
+  camera->SetPosition(glm::vec3(0, 0, 5));
   Model *model = new Model(nv, poly.surface.size() * 9, pi, iSize);
   Shader *shader = new Shader("shaders/mesh.vs", "shaders/mesh.fs");
   shader->Activate();
@@ -90,6 +99,8 @@ int main()
   fileWindow->SetUpdate([&]()
                         { 
                           model->Draw(shader); 
+                          //camera->Translate(-camera->GetFront() * fileWindow->GetDeltaTime());
+                          camera->Rotate(glm::quat(glm::vec3(0,0.0005f,0)) * fileWindow->GetDeltaTime());
                           camera->SetUniforms(shader); });
   fileWindow->Run();
   delete fileWindow;

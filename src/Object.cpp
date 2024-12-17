@@ -108,7 +108,7 @@ glm::vec3 Object::GetUp() const
 // Tr : Nesnenin ön vektörünü verir.
 glm::vec3 Object::GetFront() const
 {
-    return glm::normalize(rotation * glm::vec3(0, 0, 1));
+    return glm::normalize(rotation * glm::vec3(0, 0, -1));
 }
 // En : Gives the right vector of the object.
 // Tr : Nesnenin sağ vektörünü verir.

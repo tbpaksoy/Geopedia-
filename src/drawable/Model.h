@@ -16,6 +16,7 @@ protected:
 
 public:
     Model(float *vertices, unsigned int vertexCount, unsigned int *indices, unsigned int indexCount);
+    Model();
     ~Model();
     void Draw(Shader *shader) override;
     void Bind() override;

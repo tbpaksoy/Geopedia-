@@ -72,8 +72,8 @@ float Window::GetDeltaTime() const
 {
     return deltaTime;
 }
-// En : Sets the title of the window.
-// Tr : Pencerenin başlığını ayarlar.
+// En : Runs the window.
+// Tr : Pencereyi çalıştırır.
 void Window::Run()
 {
 
@@ -117,6 +117,10 @@ void Window::SetUpdate(std::function<void()> update)
     if (update)
         this->update = update;
 }
+// En : Sets the start function.
+// `start` : Start function.
+// Tr : Başlangıç fonksiyonunu ayarlar.
+// `start` : Başlangıç fonksiyonu.
 void Window::SetStart(std::function<void()> start)
 {
     if (start)

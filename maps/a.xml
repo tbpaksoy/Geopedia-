@@ -1,2 +1,12 @@
 <Map>
+    <Name lang="tr">Türkiye 2023 Yılı Nüfus Haritası</Name>
+    <Name lang="en">Turkey 2023 Population Map</Name>
+    <Name lang="de">Türkei 2023 Bevölkerungskarte</Name>
+    <Description lang="tr">Türkiye'nin 2023 yılı nüfus haritasıdır.</Description>
+    <Description lang="en">This is the population map of Turkey for 2023.</Description>
+    <Description lang="de">Dies ist die Bevölkerungskarte der Türkei für 2023.</Description>
+    <Relation>
+        <Data type="url" query=""></Data>
+        <Data type="local" source=""></Data>
+    </Relation>
 </Map>

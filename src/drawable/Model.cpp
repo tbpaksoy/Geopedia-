@@ -21,6 +21,12 @@ Model::Model(float *vertices, unsigned int vertexCount, unsigned int *indices, u
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 }
+Model::Model()
+{
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+}
 Model::~Model()
 {
     glDeleteVertexArrays(1, &VAO);

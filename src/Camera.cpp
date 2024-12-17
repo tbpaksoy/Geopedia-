@@ -20,6 +20,8 @@ Camera::Camera()
     top = 1.0f;
     oNear = 0.1f;
     oFar = 100.0f;
+
+    up = glm::vec3(0, 1, 0);
 }
 Camera::~Camera()
 {
@@ -30,9 +32,8 @@ Camera::~Camera()
 // Tr : Görünüm matrisini döndürür.
 glm::mat4 Camera::GetViewMatrix() const
 {
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, position);
-    return view;
+
+    return glm::lookAt(position, position + GetFront(), GetUp());
 }
 // En : Returns the perspective matrix.
 // Tr : Perspektif matrisini döndürür.
@@ -50,9 +51,7 @@ glm::mat4 Camera::GetOrthographicMatrix() const
 // Tr : Model matrisini döndürür.
 glm::mat4 Camera::GetModelMatrix() const
 {
-    glm::mat4 rotation = glm::mat4_cast(this->rotation),
-              scale = glm::scale(glm::mat4(1.0f), this->scale);
-    return rotation * scale;
+    return glm::mat4(1.0f);
 }
 // En : Sets the perspective properties.
 // `fov` : Field of view.
