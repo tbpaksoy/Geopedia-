@@ -7,3 +7,6 @@ imgui.ini
 *.dll
 *.exe
 .gitattributes
+*.a
+*.crt
+*.pem

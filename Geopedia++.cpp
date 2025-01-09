@@ -5,6 +5,8 @@
 #include <iostream>
 #include <filesystem>
 #include <time.h>
+#include <curl/curl.h>
+#include <simdjson.h>
 
 #include "src/Window.h"
 #include "src/Shader.h"
@@ -53,55 +55,41 @@ void FileDialog()
   }
   ImGui::End();
 }
-
+size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *userp)
+{
+  if (userp && contents)
+  {
+    userp->append((char *)contents, size * nmemb);
+    return size * nmemb;
+  }
+  return 0;
+}
 int main()
 {
-  srand(time(nullptr));
+  CURL *curl = curl_easy_init();
 
-  Polygon poly = Polygon();
-  for (int i = 0; i < 8; i++)
+  if (!curl)
   {
-    float x = (rand() % 2 == 0 ? -1 : 1) * (float)rand() / RAND_MAX,
-          y = (rand() % 2 == 0 ? -1 : 1) * (float)rand() / RAND_MAX;
-    glm::vec2 v = glm::vec2(x, y) * 2.0f;
-    poly.surface.push_back(v);
+    std::cout << "CURL initialization failed." << std::endl;
+    return -1;
   }
-  poly.Order();
+  std::string response;
+  std::string url = "https://nominatim.openstreetmap.org/search?q=Turkey&format=json&polygon_geojson=1";
 
-  float *pv = nullptr;
-  unsigned int *pi = nullptr;
-  int vSize, iSize;
-  poly.Data(pv, vSize, pi, iSize);
-  float *nv = new float[poly.surface.size() * 9];
+  CURLcode res;
 
-  for (int i = 0, j = 0; i < poly.surface.size() * 9; i += 9, j += 3)
-  {
-    nv[i] = pv[j];
-    nv[i + 1] = pv[j + 1];
-    nv[i + 2] = pv[j + 2];
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-    nv[i + 3] = nv[i + 4] = nv[i + 5] = 1.0f;
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+  curl_easy_setopt(curl, CURLOPT_CAINFO, "cacert.pem");
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+  curl_easy_setopt(curl, CURLOPT_USERAGENT, "Geopedia++/1.0");
+  curl_easy_perform(curl);
 
-    nv[i + 6] = std::cos(nv[i]);
-    nv[i + 7] = std::sin(nv[i + 1]);
-    nv[i + 8] = (nv[i + 6] + nv[i + 7]) / 2.0f;
-  }
+  curl_easy_cleanup(curl);
 
-  Window *fileWindow = new Window("Geopedia++", 800, 600);
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-  Camera *camera = new Camera();
-  camera->SetPosition(glm::vec3(0, 0, 5));
-  Model *model = new Model(nv, poly.surface.size() * 9, pi, iSize);
-  Shader *shader = new Shader("shaders/mesh.vs", "shaders/mesh.fs");
-  shader->Activate();
-  camera->SetUniforms(shader);
-  fileWindow->SetUpdate([&]()
-                        { 
-                          model->Draw(shader); 
-                          //camera->Translate(-camera->GetFront() * fileWindow->GetDeltaTime());
-                          camera->Rotate(glm::quat(glm::vec3(0,0.0005f,0)) * fileWindow->GetDeltaTime());
-                          camera->SetUniforms(shader); });
-  fileWindow->Run();
-  delete fileWindow;
+  simdjson::dom::parser parser;
+  simdjson::dom::element doc = parser.parse(response);
+  std::cout << doc.at(0).at_key("place_id") << std::endl;
+  return 0;
 }
