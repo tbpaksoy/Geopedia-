@@ -76,10 +76,7 @@ int main()
   std::string response;
   std::string url = "https://nominatim.openstreetmap.org/search?q=Turkey&format=json&polygon_geojson=1";
 
-  CURLcode res;
-
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
   curl_easy_setopt(curl, CURLOPT_CAINFO, "cacert.pem");
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
