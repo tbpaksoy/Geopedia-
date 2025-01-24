@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <functional>
 #include <vector>
-namespace GPPP
+namespace geo
 {
     class Window
     {

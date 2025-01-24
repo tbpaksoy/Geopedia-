@@ -4,26 +4,30 @@
 #include <GL/glew.h>
 #include "IDrawable.h"
 
-class Window;
-
-class Framebuffer : public IDrawable
+namespace geo
 {
-private:
-    Window *attachedWindow = nullptr;
-    GLuint fbo, texture, rbo;
 
-public:
-    Framebuffer(unsigned int width, unsigned int height);
-    Framebuffer(Window *window);
-    ~Framebuffer();
+    class Window;
 
-    void AttachWindow(Window *window);
-    void DetachWindow();
-    void Draw() override;
+    class Framebuffer : public IDrawable
+    {
+    private:
+        Window *attachedWindow = nullptr;
+        GLuint fbo, texture, rbo;
 
-    void Bind() override;
+    public:
+        Framebuffer(unsigned int width, unsigned int height);
+        Framebuffer(Window *window);
+        ~Framebuffer();
 
-    GLuint GetFBO();
-    Window *GetAttachedWindow();
-};
+        void AttachWindow(Window *window);
+        void DetachWindow();
+        void Draw() override;
+
+        void Bind() override;
+
+        GLuint GetFBO();
+        Window *GetAttachedWindow();
+    };
+}
 #endif

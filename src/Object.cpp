@@ -1,7 +1,7 @@
 #ifndef OBJECT_CPP
 #define OBJECT_CPP
 #include "Object.h"
-namespace GPPP
+namespace geo
 {
 #pragma region En : Constructors and Destructor Tr : Yapıcılar ve Yıkıcı
     Object::Object(glm::vec3 position, glm::quat rotation, glm::vec3 scale, glm::vec3 up)

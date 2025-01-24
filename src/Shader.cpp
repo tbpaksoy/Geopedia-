@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include <fstream>
 #include <iostream>
-namespace GPPP
+namespace geo
 {
     static std::map<std::string, GLint> attributesSizes =
         {

@@ -5,7 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Camera.h"
-namespace GPPP
+namespace geo
 {
 #pragma region Constructors and Destructors
     Camera::Camera()

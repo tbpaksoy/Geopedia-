@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <map>
-namespace GPPP
+namespace geo
 {
     class Shader
     {

@@ -4,7 +4,7 @@
 #include <simdjson.h>
 #include "Polygon.h"
 
-simdjson::dom::element GetDocuments(const char *path, const char *cert);
-GPPP::Polygon ExtractPolygon(simdjson::dom::element doc);
+simdjson::dom::element GetElement(const char *path, const char *cert);
+geo::Polygon ExtractPolygon(simdjson::dom::element doc);
 
 #endif

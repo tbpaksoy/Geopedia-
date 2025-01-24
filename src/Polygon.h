@@ -2,7 +2,7 @@
 #define POLYGON_H
 #include <vector>
 #include <glm/glm.hpp>
-namespace GPPP
+namespace geo
 {
     class Model;
     typedef std::vector<glm::vec2> Surface;

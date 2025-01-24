@@ -6,7 +6,7 @@
 
 #include "Object.h"
 #include "Shader.h"
-namespace GPPP
+namespace geo
 {
     enum class CameraType
     {

@@ -8,7 +8,7 @@
 #include <glm/geometric.hpp>
 #include <iostream>
 
-namespace GPPP
+namespace geo
 {
     static bool IsLeft(glm::vec2 a0, glm::vec2 a1, glm::vec2 b)
     {
@@ -242,13 +242,25 @@ namespace GPPP
     }
     void Polygon::Normalize(float right, float top, float left, float bottom)
     {
-        float width = right - left,
-              height = top - bottom;
-        for (int i = 0; i < surface.size(); i++)
-        {
-            surface[i].x = (surface[i].x - left) / width;
-            surface[i].y = (surface[i].y - bottom) / height;
-        }
+        /*         float minX = std::min(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
+                                      { return a.x < b.x; })
+                                 ->x,
+                      minY = std::min(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
+                                      { return a.y < b.y; })
+                                 ->y,
+                      maxX = std::max(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
+                                      { return a.x < b.x; })
+                                 ->x,
+                      maxY = std::max(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
+                                      { return a.y < b.y; })
+                                 ->y;
+                float width = maxX - minX,
+                      height = maxY - minY;
+                for (glm::vec2 &v : surface)
+                {
+                    v.x = (v.x - minX) / width * (right - left) + left;
+                    v.y = (v.y - minY) / height * (top - bottom) + bottom;
+                } */
     }
 }
 #endif
