@@ -37,9 +37,9 @@ namespace geo
     }
     void Model::Draw(Shader *shader)
     {
+        shader->Use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-        shader->Use();
     }
     void Model::Bind()
     {

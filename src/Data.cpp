@@ -1,6 +1,7 @@
 #ifndef DATA_CPP
 #include <curl/curl.h>
 #include <glm/glm.hpp>
+#include <cstring>
 
 #include "Data.h"
 static simdjson::dom::parser parser;
@@ -42,21 +43,24 @@ simdjson::dom::element GetElement(const char *path, const char *cert)
 }
 geo::Polygon ExtractPolygon(simdjson::dom::element doc)
 {
-    simdjson::dom::element polygon = doc["geometry"]["coordinates"];
+    simdjson::dom::element polygon = doc["coordinates"];
     geo::Polygon poly;
     const char *type = doc["type"].get_c_str().value();
 
-    /*     if (type == "MultiPolygon")
+    std::cout << type << std::endl;
+
+    if (std::strcmp(type, "Multipolygon") == 0 || std::strcmp(type, "Polygon") == 0)
+    {
+        std::cout << "ok" << std::endl;
+        for (auto o : polygon.get_array().value())
         {
-            for (auto o : polygon.get_array().value())
+            for (auto p : o.get_array().value())
             {
-                for (auto p : o.get_array().value())
-                {
-                    glm::vec2 point = glm::vec2(p.at(0).get_double().value(), p.at(1).get_double().value());
-                    poly.surface.push_back(point);
-                }
+                glm::vec2 point = glm::vec2(p.at(0).get_double().value(), p.at(1).get_double().value());
+                poly.surface.push_back(point);
             }
-        } */
+        }
+    }
 
     return poly;
 }

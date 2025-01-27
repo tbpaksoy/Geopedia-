@@ -183,7 +183,7 @@ namespace geo
     {
         return nullptr;
     }
-    void Polygon::Data(float *&vertices, int &vSize, unsigned int *&indices, int &iSize)
+    void Polygon::Data(float *&vertices, int &vSize, unsigned int *&indices, int &iSize, std::vector<float> extra)
     {
         iSize = vSize = 0;
         Surface surface = this->surface;
@@ -203,18 +203,78 @@ namespace geo
         {
             combined.insert(combined.end(), s.begin(), s.end());
         }
-        vSize = combined.size() * 3;
+        unsigned int stride = 3 + extra.size();
+        vSize = combined.size() * stride;
         vertices = new float[vSize];
+        for (int i = 0; i < combined.size(); i++)
+        {
+            vertices[i * stride] = combined[i].x;
+            vertices[i * stride + 1] = combined[i].y;
+            vertices[i * stride + 2] = 0.0f;
+            for (int j = 0; j < extra.size(); j++)
+            {
+                vertices[i * stride + 3 + j] = extra[j];
+            }
+        }
+        if (holes.size())
+            indices = Triangulate(this->surface, holes, iSize);
+        else
+            indices = Triangulate(this->surface, iSize);
+    }
+    unsigned int *Polygon::Indices(unsigned int &size)
+    {
+        Surface surface = this->surface;
+        Holes holes = this->holes;
+        for (int i = 0; i < holes.size(); i++)
+        {
+            if (Intersecting(surface, holes[i]))
+            {
+                surface = Subtract(surface, holes[i]);
+                holes.erase(holes.begin() + i);
+                i--;
+            }
+        }
+        Surface combined;
+        combined.insert(combined.end(), surface.begin(), surface.end());
+        for (Surface s : holes)
+        {
+            combined.insert(combined.end(), s.begin(), s.end());
+        }
+        int _size;
+        if (holes.size())
+            return Triangulate(surface, holes, _size);
+        else
+            return Triangulate(surface, _size);
+        size = _size;
+    }
+    float *Polygon::Vertices(int &size)
+    {
+        Surface surface = this->surface;
+        Holes holes = this->holes;
+        for (int i = 0; i < holes.size(); i++)
+        {
+            if (Intersecting(surface, holes[i]))
+            {
+                surface = Subtract(surface, holes[i]);
+                holes.erase(holes.begin() + i);
+                i--;
+            }
+        }
+        Surface combined;
+        combined.insert(combined.end(), surface.begin(), surface.end());
+        for (Surface s : holes)
+        {
+            combined.insert(combined.end(), s.begin(), s.end());
+        }
+        size = combined.size() * 3;
+        float *vertices = new float[size];
         for (int i = 0; i < combined.size(); i++)
         {
             vertices[i * 3] = combined[i].x;
             vertices[i * 3 + 1] = combined[i].y;
             vertices[i * 3 + 2] = 0.0f;
         }
-        if (holes.size())
-            indices = Triangulate(this->surface, holes, iSize);
-        else
-            indices = Triangulate(this->surface, iSize);
+        return vertices;
     }
     void Polygon::Order()
     {
@@ -237,30 +297,39 @@ namespace geo
                     surface.erase(surface.begin() + j);
                     j--;
                 }
+                else
+                {
+                    break;
+                }
             }
         }
     }
     void Polygon::Normalize(float right, float top, float left, float bottom)
     {
-        /*         float minX = std::min(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
-                                      { return a.x < b.x; })
-                                 ->x,
-                      minY = std::min(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
-                                      { return a.y < b.y; })
-                                 ->y,
-                      maxX = std::max(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
-                                      { return a.x < b.x; })
-                                 ->x,
-                      maxY = std::max(surface.begin(), surface.end(), [](glm::vec2 a, glm::vec2 b)
-                                      { return a.y < b.y; })
-                                 ->y;
-                float width = maxX - minX,
-                      height = maxY - minY;
-                for (glm::vec2 &v : surface)
-                {
-                    v.x = (v.x - minX) / width * (right - left) + left;
-                    v.y = (v.y - minY) / height * (top - bottom) + bottom;
-                } */
+        float minX = surface[0].x,
+              minY = surface[0].y,
+              maxX = surface[0].x,
+              maxY = surface[0].y;
+        for (glm::vec2 v : surface)
+        {
+            if (v.x < minX)
+                minX = v.x;
+            if (v.x > maxX)
+                maxX = v.x;
+            if (v.y < minY)
+                minY = v.y;
+            if (v.y > maxY)
+                maxY = v.y;
+        }
+        float width = maxX - minX,
+              height = maxY - minY;
+        float scaleX = (right - left) / width,
+              scaleY = (top - bottom) / height;
+        for (int i = 0; i < surface.size(); i++)
+        {
+            surface[i].x = (surface[i].x - minX) * scaleX + left;
+            surface[i].y = (surface[i].y - minY) * scaleY + bottom;
+        }
     }
 }
 #endif

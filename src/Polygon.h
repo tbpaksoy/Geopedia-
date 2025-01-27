@@ -12,7 +12,9 @@ namespace geo
         Surface surface;
         Holes holes;
         void Order();
-        void Data(float *&vertices, int &vSize, unsigned int *&indices, int &iSize);
+        void Data(float *&vertices, int &vSize, unsigned int *&indices, int &iSize, std::vector<float> extra = {});
+        unsigned int *Indices(unsigned int &size);
+        float *Vertices(int &size);
         void MakeSimple(double distance);
         void Normalize(float right, float top, float left, float bottom);
     };
